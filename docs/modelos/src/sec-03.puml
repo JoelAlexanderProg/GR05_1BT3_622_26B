@@ -9,10 +9,10 @@ boundary "detalleReporte.jsp" as DT
 boundary "formulario\nReclamacion.jsp" as F
 control ":ControlReclamaciones" as C
 participant ":ReporteDAO" as RD
+participant ":ReclamacionDAO" as CD
 entity ":Reporte" as RP
 entity ":Reclamacion" as RC
 entity ":Respuesta\nVerificacion" as RV
-participant ":ReclamacionDAO" as CD
 
 R -> DT : 1. solicitarReclamacion(idReporte)
 DT -> C : 2. obtenerPreguntas(actor, reporteId)  [GET /reclamaciones/nueva?reporte]

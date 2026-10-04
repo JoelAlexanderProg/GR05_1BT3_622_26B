@@ -7,10 +7,10 @@ hide footbox
 actor "Reportante" as R
 boundary "formularioReporte.jsp" as F
 control ":ControlRegistroReporte" as C
+participant ":ReporteDAO" as D
 entity ":Ubicacion" as U
 entity ":Reporte" as RP
 entity ":Pregunta\nVerificacion" as P
-participant ":ReporteDAO" as D
 
 R -> C : 1. mostrarFormulario()  [GET /reportes/nuevo]
 C -> F : forward(categorias)

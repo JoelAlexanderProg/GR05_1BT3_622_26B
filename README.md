@@ -52,6 +52,7 @@ src/main/webapp/
 ├── css/, js/         estilos y mapa
 └── lib/leaflet/      librería del mapa
 docs/modelos/         diagramas de clases y de secuencia del diseño
+pruebas/              casos de prueba automatizados del flujo básico (CP-01A a CP-04)
 ```
 
 ## Cómo ejecutar
@@ -69,6 +70,16 @@ Solo se necesita Java 17 o superior. Maven y Tomcat se descargan automáticament
 Luego abrir <http://localhost:8080/GR05_1BT3_622_26B/>. Para detener el servidor, presionar `Ctrl + C`.
 
 Para probar el flujo completo se necesitan dos usuarios, por ejemplo en dos navegadores: uno registra un objeto encontrado y el otro lo reclama. La identificación pide solo el nombre y un correo `@epn.edu.ec`.
+
+## Casos de prueba
+
+`pruebas/casos-de-prueba.js` ejecuta en un navegador los cinco casos de prueba del flujo básico definidos en la Tarea 1, con dos usuarios en sesiones separadas, y comprueba el resultado esperado de cada paso. Con la aplicación en ejecución y la base de datos vacía:
+
+```bash
+cd pruebas
+npm install puppeteer-core
+node casos-de-prueba.js capturas
+```
 
 ## Integrantes
 

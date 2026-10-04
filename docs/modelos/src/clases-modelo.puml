@@ -2,7 +2,8 @@
 !include estilo.iuml
 ' Diagrama de clases de diseño: paquete modelo (entidades JPA).
 ' Refina el «Modelo de dominio acumulado — Incremento 2» de la Tarea 1 con los tipos de Java y las anotaciones JPA.
-' Se omiten los getters. En verde: lo que se añadió al pasar del análisis al diseño.
+' Se omiten los getters y las clases de apoyo (Campus, DatosReporte, FiltrosReporte, DatosPublicos).
+' En verde: lo que se añadió al pasar del análisis al diseño.
 skinparam nodesep 45
 skinparam ranksep 55
 hide empty members
@@ -92,25 +93,6 @@ enum EstadoReclamacion #E3F4E8 {
   COMPLETADA
 }
 
-class Campus #E3F4E8 {
-  + {static} LAT_MIN, LAT_MAX, LON_MIN, LON_MAX : double
-  + {static} ZONAS : List<String>
-  + {static} contiene(latitud, longitud) : boolean
-  + {static} zonaDe(latitud, longitud) : String
-}
-class DatosReporte <<record>> #E3F4E8 {
-  tipo, categoriaId, descripcionPublica,
-  fechaSuceso, latitud, longitud, preguntas
-}
-class FiltrosReporte <<record>> #E3F4E8 {
-  tipo, categoriaId, fechaDesde, fechaHasta, zona
-}
-class DatosPublicos #E3F4E8 {
-  id, tipo, categoria, descripcionPublica,
-  fechaSuceso, estado, latitud, longitud, zona
-  + DatosPublicos(reporte : Reporte)
-}
-
 Usuario "1" <-- "0..*" Reporte : autor
 Categoria "1" <-- "0..*" Reporte : categoria
 Reporte *-- "1" Ubicacion : ubicacion
@@ -124,7 +106,4 @@ Reclamacion "1" -- "0..1" AcuerdoEntrega : acuerdo
 Reporte ..> TipoReporte
 Reporte ..> EstadoReporte
 Reclamacion ..> EstadoReclamacion
-Ubicacion ..> Campus
-Reporte ..> DatosReporte
-DatosPublicos ..> Reporte
 @enduml
