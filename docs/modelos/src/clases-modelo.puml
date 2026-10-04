@@ -1,0 +1,130 @@
+@startuml clases-modelo
+!include estilo.iuml
+' Diagrama de clases de diseño: paquete modelo (entidades JPA).
+' Refina el «Modelo de dominio acumulado — Incremento 2» de la Tarea 1 con los tipos de Java y las anotaciones JPA.
+' Se omiten los getters. En verde: lo que se añadió al pasar del análisis al diseño.
+skinparam nodesep 45
+skinparam ranksep 55
+hide empty members
+
+class Usuario <<Entity>> {
+  - id : UUID
+  - nombre : String
+  - correo : String
+}
+
+class Categoria <<Entity>> {
+  - id : UUID
+  - nombre : String
+}
+
+class Reporte <<Entity>> {
+  - id : UUID
+  - tipo : TipoReporte
+  - descripcionPublica : String
+  - fechaSuceso : LocalDate
+  - estado : EstadoReporte
+  - fechaDevolucion : LocalDateTime [0..1]
+  + Reporte(datos, autor, categoria, ubicacion)
+  + publicar() : void
+  + reservar() : void
+  + marcarEntregado(fecha : LocalDateTime) : void
+  <color:#1E6B3A>+ agregarPregunta(texto : String) : void</color>
+  <color:#1E6B3A>+ esEncontrado() : boolean</color>
+  <color:#1E6B3A>+ estaActivo() : boolean</color>
+  <color:#1E6B3A>+ esAutor(usuario : Usuario) : boolean</color>
+}
+
+class Ubicacion <<Embeddable>> {
+  - latitud : double
+  - longitud : double
+  - zona : String
+  + estaDentroDelCampus() : boolean
+}
+
+class PreguntaVerificacion <<Entity>> {
+  - id : UUID
+  - texto : String
+}
+
+class Reclamacion <<Entity>> {
+  - id : UUID
+  - fechaCreacion : LocalDateTime
+  - estado : EstadoReclamacion
+  + Reclamacion(reclamante, objeto)
+  + aceptar() : void
+  + completar() : void
+  <color:#1E6B3A>+ agregarRespuesta(pregunta, textoPrivado) : void</color>
+  <color:#1E6B3A>+ registrarAcuerdo(acuerdo : AcuerdoEntrega) : void</color>
+  <color:#1E6B3A>+ estaPendiente() : boolean</color>
+  <color:#1E6B3A>+ estaAceptada() : boolean</color>
+  <color:#1E6B3A>+ esReclamante(usuario : Usuario) : boolean</color>
+}
+
+class RespuestaVerificacion <<Entity>> {
+  - id : UUID
+  - textoPrivado : String
+}
+
+class AcuerdoEntrega <<Entity>> {
+  - id : UUID
+  - lugar : String
+  - fechaPropuesta : LocalDateTime
+  - fechaConfirmacion : LocalDateTime [0..1]
+  + AcuerdoEntrega(reclamacion, lugar, fechaPropuesta)
+  + confirmar(fecha : LocalDateTime) : void
+  <color:#1E6B3A>+ estaConfirmado() : boolean</color>
+}
+
+enum TipoReporte #E3F4E8 {
+  PERDIDO
+  ENCONTRADO
+}
+enum EstadoReporte #E3F4E8 {
+  BORRADOR
+  ACTIVO
+  RESERVADO
+  ENTREGADO
+}
+enum EstadoReclamacion #E3F4E8 {
+  PENDIENTE
+  ACEPTADA
+  COMPLETADA
+}
+
+class Campus #E3F4E8 {
+  + {static} LAT_MIN, LAT_MAX, LON_MIN, LON_MAX : double
+  + {static} ZONAS : List<String>
+  + {static} contiene(latitud, longitud) : boolean
+  + {static} zonaDe(latitud, longitud) : String
+}
+class DatosReporte <<record>> #E3F4E8 {
+  tipo, categoriaId, descripcionPublica,
+  fechaSuceso, latitud, longitud, preguntas
+}
+class FiltrosReporte <<record>> #E3F4E8 {
+  tipo, categoriaId, fechaDesde, fechaHasta, zona
+}
+class DatosPublicos #E3F4E8 {
+  id, tipo, categoria, descripcionPublica,
+  fechaSuceso, estado, latitud, longitud, zona
+  + DatosPublicos(reporte : Reporte)
+}
+
+Usuario "1" <-- "0..*" Reporte : autor
+Categoria "1" <-- "0..*" Reporte : categoria
+Reporte *-- "1" Ubicacion : ubicacion
+Reporte "1" *-- "0..*" PreguntaVerificacion : preguntas
+Usuario "1" <-- "0..*" Reclamacion : reclamante
+Reporte "1" <-- "0..*" Reclamacion : objeto
+Reclamacion "1" *-- "1..*" RespuestaVerificacion : respuestas
+PreguntaVerificacion "1" <-- "0..*" RespuestaVerificacion : pregunta
+Reclamacion "1" -- "0..1" AcuerdoEntrega : acuerdo
+
+Reporte ..> TipoReporte
+Reporte ..> EstadoReporte
+Reclamacion ..> EstadoReclamacion
+Ubicacion ..> Campus
+Reporte ..> DatosReporte
+DatosPublicos ..> Reporte
+@enduml
