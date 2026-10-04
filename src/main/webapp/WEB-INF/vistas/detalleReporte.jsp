@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-<%-- «boundary» DetalleReporte (CU-02): mostrarDetalle(datosPublicos) --%>
+<%-- «boundary» DetalleReporte (CU-02 y CU-03): mostrarDetalle(datosPublicos), solicitarReclamacion(idReporte) --%>
 <c:set var="titulo" value="Detalle del reporte"/>
 <%@ include file="/WEB-INF/vistas/comun/cabecera.jspf" %>
 
@@ -22,6 +22,13 @@
 </div>
 
 <div class="acciones">
+    <%-- solicitarReclamacion(idReporte) --%>
+    <c:if test="${puedeReclamar}">
+        <a class="boton" id="reclamar" href="${ctx}/reclamaciones/nueva?reporte=${detalle.id}">Reclamar objeto</a>
+    </c:if>
+    <c:if test="${esAutor and detalle.tipo eq 'ENCONTRADO'}">
+        <a class="boton" id="verReclamaciones" href="${ctx}/devoluciones?reporte=${detalle.id}">Ver reclamaciones</a>
+    </c:if>
     <a href="${ctx}/reportes">Volver al mapa</a>
 </div>
 

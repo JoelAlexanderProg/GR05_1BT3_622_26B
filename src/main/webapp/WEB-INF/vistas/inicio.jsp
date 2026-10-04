@@ -31,6 +31,9 @@
                         <td>${reporte.estado.etiqueta}</td>
                         <td class="enlaces">
                             <a href="${ctx}/reportes/detalle?id=${reporte.id}">Detalle</a>
+                            <c:if test="${reporte.esEncontrado()}">
+                                <a href="${ctx}/devoluciones?reporte=${reporte.id}">Reclamaciones</a>
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>
@@ -39,6 +42,33 @@
         </c:otherwise>
     </c:choose>
 
+    <h2>Mis reclamaciones</h2>
+    <c:choose>
+        <c:when test="${empty misReclamaciones}">
+            <p class="vacio">Todavía no ha reclamado objetos.</p>
+        </c:when>
+        <c:otherwise>
+            <table id="misReclamaciones">
+                <thead>
+                <tr><th>Objeto</th><th>Fecha</th><th>Estado</th><th></th></tr>
+                </thead>
+                <tbody>
+                <c:forEach var="reclamacion" items="${misReclamaciones}">
+                    <tr>
+                        <td><c:out value="${reclamacion.objeto.descripcionPublica}"/></td>
+                        <td>${fn:replace(reclamacion.fechaCreacion, 'T', ' ')}</td>
+                        <td>${reclamacion.estado.etiqueta}</td>
+                        <td class="enlaces">
+                            <c:if test="${not empty reclamacion.acuerdo}">
+                                <a href="${ctx}/devoluciones?acuerdo=${reclamacion.id}">Acuerdo de entrega</a>
+                            </c:if>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </c:otherwise>
+    </c:choose>
 </c:if>
 
 <%@ include file="/WEB-INF/vistas/comun/pie.jspf" %>
