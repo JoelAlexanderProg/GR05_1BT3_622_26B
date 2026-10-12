@@ -35,24 +35,9 @@ public class ControlDevoluciones extends ControlBase {
             throws ServletException, IOException {
         Usuario actor = actorIdentificado(request);
         if (request.getParameter("acuerdo") != null) {
-            // SEC-04 · 25: consultar propuesta (reclamante, en otra sesión)
-            UUID id = leerId(request, "acuerdo");
-            // SEC-04 · 26: consultarAcuerdo(actor, id)
-            AcuerdoEntrega acuerdo = consultarAcuerdo(actor, id);
-            // SEC-04 · 29-31: acuerdo autorizado → mostrarPropuesta(acuerdo) → lugar y fecha propuestos
-            request.setAttribute("acuerdo", acuerdo);
-            request.setAttribute("esReclamante", acuerdo.getReclamacion().esReclamante(actor));
-            mostrar("vistaAcuerdoEntrega.jsp", request, response);
+            mostrarPropuesta(actor, request, response);
         } else if (request.getParameter("reclamacion") != null) {
-            // SEC-04 · 7: seleccionar reclamación
-            UUID reclamacionId = leerId(request, "reclamacion");
-            // SEC-04 · 8: consultarRespuestas(actor, reclamacionId)
-            List<RespuestaVerificacion> respuestas = consultarRespuestas(actor, reclamacionId);
-            // SEC-04 · 11-13: respuestas → mostrarRespuestas(respuestas) → disponibles para revisión
-            Reclamacion reclamacion = reclamacionDAO.buscarPorId(reclamacionId);
-            request.setAttribute("reclamacion", reclamacion);
-            request.setAttribute("respuestas", respuestas);
-            mostrarPanel(actor, reclamacion.getObjeto().getId(), request, response);
+            mostrarRespuestas(actor, request, response);
         } else {
             // SEC-04 · 1: abrir reclamaciones del reporte
             mostrarPanel(actor, leerId(request, "reporte"), request, response);
@@ -176,6 +161,31 @@ public class ControlDevoluciones extends ControlBase {
         reclamacion.completar();
         // Nota de SEC-04: registra ambos estados finales conjuntamente (una sola transacción)
         reclamacionDAO.actualizar(reclamacion);
+    }
+
+    private void mostrarPropuesta(Usuario actor, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // SEC-04 · 25: consultar propuesta (reclamante, en otra sesión)
+        UUID id = leerId(request, "acuerdo");
+        // SEC-04 · 26: consultarAcuerdo(actor, id)
+        AcuerdoEntrega acuerdo = consultarAcuerdo(actor, id);
+        // SEC-04 · 29-31: acuerdo autorizado → mostrarPropuesta(acuerdo) → lugar y fecha propuestos
+        request.setAttribute("acuerdo", acuerdo);
+        request.setAttribute("esReclamante", acuerdo.getReclamacion().esReclamante(actor));
+        mostrar("vistaAcuerdoEntrega.jsp", request, response);
+    }
+
+    private void mostrarRespuestas(Usuario actor, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // SEC-04 · 7: seleccionar reclamación
+        UUID reclamacionId = leerId(request, "reclamacion");
+        // SEC-04 · 8: consultarRespuestas(actor, reclamacionId)
+        List<RespuestaVerificacion> respuestas = consultarRespuestas(actor, reclamacionId);
+        // SEC-04 · 11-13: respuestas → mostrarRespuestas(respuestas) → disponibles para revisión
+        Reclamacion reclamacion = reclamacionDAO.buscarPorId(reclamacionId);
+        request.setAttribute("reclamacion", reclamacion);
+        request.setAttribute("respuestas", respuestas);
+        mostrarPanel(actor, reclamacion.getObjeto().getId(), request, response);
     }
 
     private void mostrarPanel(Usuario actor, UUID reporteId, HttpServletRequest request, HttpServletResponse response)
