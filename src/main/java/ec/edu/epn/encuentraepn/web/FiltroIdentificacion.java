@@ -1,13 +1,11 @@
 package ec.edu.epn.encuentraepn.web;
 
-import ec.edu.epn.encuentraepn.controlador.ControlBase;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -21,11 +19,12 @@ import java.nio.charset.StandardCharsets;
 @WebFilter({"/reportes/nuevo", "/reclamaciones/*", "/devoluciones"})
 public class FiltroIdentificacion extends HttpFilter {
 
+    private final SesionUsuario sesion = new SesionUsuario();
+
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain cadena)
             throws IOException, ServletException {
-        HttpSession sesion = request.getSession(false);
-        if (sesion != null && sesion.getAttribute(ControlBase.USUARIO_EN_SESION) != null) {
+        if (sesion.hayUsuario(request)) {
             cadena.doFilter(request, response);
             return;
         }

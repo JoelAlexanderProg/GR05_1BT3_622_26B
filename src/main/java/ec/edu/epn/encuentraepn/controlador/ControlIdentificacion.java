@@ -23,7 +23,7 @@ public class ControlIdentificacion extends ControlBase {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if ("/salir".equals(request.getServletPath())) {
-            request.getSession().invalidate();
+            sesion.cerrar(request);
             redirigir(request, response, "/inicio");
         } else {
             mostrar("identificacion.jsp", request, response);
@@ -41,7 +41,7 @@ public class ControlIdentificacion extends ControlBase {
             return;
         }
         Usuario usuario = usuarioDAO.obtenerORegistrar(nombre, correo);
-        request.getSession().setAttribute(USUARIO_EN_SESION, usuario);
+        sesion.iniciar(request, usuario);
         redirigir(request, response, destino(request.getParameter("destino")));
     }
 

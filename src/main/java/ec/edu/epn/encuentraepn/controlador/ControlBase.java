@@ -1,13 +1,12 @@
 package ec.edu.epn.encuentraepn.controlador;
 
-import ec.edu.epn.encuentraepn.dao.UsuarioDAO;
 import ec.edu.epn.encuentraepn.modelo.TipoReporte;
 import ec.edu.epn.encuentraepn.modelo.Usuario;
+import ec.edu.epn.encuentraepn.web.SesionUsuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -20,10 +19,9 @@ import java.util.UUID;
  */
 public abstract class ControlBase extends HttpServlet {
 
-    public static final String USUARIO_EN_SESION = "usuario";
     private static final String VISTAS = "/WEB-INF/vistas/";
 
-    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    protected final SesionUsuario sesion = new SesionUsuario();
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
@@ -40,9 +38,7 @@ public abstract class ControlBase extends HttpServlet {
      * Usuario identificado en la sesión (el «actor» de los diagramas), o null si no hay ninguno.
      */
     protected Usuario actor(HttpServletRequest request) {
-        HttpSession sesion = request.getSession(false);
-        Usuario enSesion = sesion == null ? null : (Usuario) sesion.getAttribute(USUARIO_EN_SESION);
-        return enSesion == null ? null : usuarioDAO.buscarPorId(enSesion.getId());
+        return sesion.usuario(request);
     }
 
     protected Usuario actorIdentificado(HttpServletRequest request) {
