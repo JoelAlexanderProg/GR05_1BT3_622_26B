@@ -36,6 +36,11 @@ public final class Campus {
         return ZONA_SUR;
     }
 
+    /** Devuelve la zona del campus que tiene ese nombre, o null si no existe. */
+    public static String buscarZona(String nombre) {
+        return nombre != null && ZONAS.contains(nombre) ? nombre : null;
+    }
+
     /** Alto, en grados de latitud, de cada una de las tres franjas del campus. */
     private static double altoDeFranja() {
         return (LAT_MAX - LAT_MIN) / 3;

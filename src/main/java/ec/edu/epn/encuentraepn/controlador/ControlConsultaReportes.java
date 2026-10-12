@@ -97,10 +97,6 @@ public class ControlConsultaReportes extends ControlBase {
                 leerIdOpcional(request.getParameter("categoria")),
                 leerFecha(request.getParameter("desde")),
                 leerFecha(request.getParameter("hasta")),
-                leerZona(request.getParameter("zona")));
-    }
-
-    private String leerZona(String valor) {
-        return valor != null && Campus.ZONAS.contains(valor) ? valor : null;
+                Campus.buscarZona(request.getParameter("zona")));
     }
 }
