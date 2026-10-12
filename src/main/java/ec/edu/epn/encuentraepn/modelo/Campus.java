@@ -27,13 +27,17 @@ public final class Campus {
     }
 
     public static String zonaDe(double latitud, double longitud) {
-        double franja = (LAT_MAX - LAT_MIN) / 3;
-        if (latitud >= LAT_MAX - franja) {
+        if (latitud >= LAT_MAX - altoDeFranja()) {
             return ZONA_NORTE;
         }
-        if (latitud >= LAT_MIN + franja) {
+        if (latitud >= LAT_MIN + altoDeFranja()) {
             return ZONA_CENTRO;
         }
         return ZONA_SUR;
+    }
+
+    /** Alto, en grados de latitud, de cada una de las tres franjas del campus. */
+    private static double altoDeFranja() {
+        return (LAT_MAX - LAT_MIN) / 3;
     }
 }
