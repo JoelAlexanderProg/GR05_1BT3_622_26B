@@ -72,11 +72,12 @@ public abstract class ControlBase extends HttpServlet {
 
     /** Convierte el texto en un tipo de reporte, o devuelve null si no es válido. */
     protected TipoReporte leerTipo(String valor) {
-        try {
-            return TipoReporte.valueOf(valor);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            return null;
+        for (TipoReporte tipo : TipoReporte.values()) {
+            if (tipo.name().equals(valor)) {
+                return tipo;
+            }
         }
+        return null;
     }
 
     /** Convierte el texto (aaaa-mm-dd) en una fecha, o devuelve null si no es válido. */
