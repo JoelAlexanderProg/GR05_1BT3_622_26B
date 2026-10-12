@@ -46,7 +46,7 @@ src/main/java/ec/edu/epn/encuentraepn/
 ├── modelo/        entidades JPA, enumeraciones y datos de apoyo (Campus, DatosReporte, FiltrosReporte, DatosPublicos)
 ├── dao/           JPAUtil, GenericDAO<T> y un DAO por entidad raíz
 ├── controlador/   un Servlet por clase de control, más la identificación y la página de inicio
-└── web/           filtros y carga inicial de categorías
+└── web/           filtros, sesión del usuario y carga inicial de categorías
 src/main/webapp/
 ├── WEB-INF/vistas/   una JSP por clase de interfaz
 ├── css/, js/         estilos y mapa
@@ -80,6 +80,18 @@ cd pruebas
 npm install puppeteer-core
 node casos-de-prueba.js capturas
 ```
+
+## Refactorizaciones (Práctica 1)
+
+Sobre el código de la Tarea 3 se aplicaron cinco refactorizaciones del catálogo de Fowler, cada una en su propio commit. Los casos de prueba se ejecutaron después de cada commit y siguen pasando.
+
+| Refactorización | Dónde | Commit |
+|---|---|---|
+| Extract Method | `ControlDevoluciones.doGet` → `mostrarPropuesta` y `mostrarRespuestas` | [`76a48a7`](https://github.com/JoelAlexanderProg/GR05_1BT3_622_26B/commit/76a48a7) |
+| Replace Temp with Query | `Campus.zonaDe`: variable `franja` → consulta `altoDeFranja()` | [`343ccf9`](https://github.com/JoelAlexanderProg/GR05_1BT3_622_26B/commit/343ccf9) |
+| Substitute Algorithm | `ControlBase.leerTipo`: búsqueda entre los valores en lugar de atrapar excepciones | [`40c1462`](https://github.com/JoelAlexanderProg/GR05_1BT3_622_26B/commit/40c1462) |
+| Move Method | `ControlConsultaReportes.leerZona` → `Campus.buscarZona` | [`3a546ce`](https://github.com/JoelAlexanderProg/GR05_1BT3_622_26B/commit/3a546ce) |
+| Extract Class | `ControlBase` → `SesionUsuario` | [`fd16e30`](https://github.com/JoelAlexanderProg/GR05_1BT3_622_26B/commit/fd16e30) |
 
 ## Integrantes
 

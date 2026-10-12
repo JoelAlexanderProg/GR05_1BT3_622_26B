@@ -38,6 +38,15 @@ package "controlador (Servlets) — «control»" {
   }
 }
 
+package "web (sesión)" {
+  class SesionUsuario {
+    + iniciar(request, usuario)
+    + hayUsuario(request) : boolean
+    + usuario(request) : Usuario
+    + cerrar(request)
+  }
+}
+
 package "persistencia (DAO + JPA)" {
   abstract class "GenericDAO<T>" as GenericDAO {
     + guardar(entidad : T) : T
@@ -71,7 +80,8 @@ ControlBase <|- ControlConsultaReportes
 ControlRegistroReporte --> ReporteDAO
 ControlRegistroReporte --> CategoriaDAO
 ControlConsultaReportes --> ReporteDAO
-ControlBase --> UsuarioDAO
+ControlBase --> SesionUsuario
+SesionUsuario --> UsuarioDAO
 
 ReporteDAO --|> GenericDAO
 CategoriaDAO --|> GenericDAO
